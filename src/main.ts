@@ -8,21 +8,20 @@ import {
 } from "obsidian";
 import {
     DEFAULT_SETTINGS,
-    type MyPluginSettings,
     SampleSettingTab,
+    type WeeklyNotesSettings,
 } from "./settings";
 
 // Remember to rename these classes and interfaces!
 
 export default class MyPlugin extends Plugin {
-    settings: MyPluginSettings;
+    settings: WeeklyNotesSettings;
 
     async onload() {
         await this.loadSettings();
 
         // This creates an icon in the left ribbon.
         this.addRibbonIcon("dice", "Sample", (_event: MouseEvent) => {
-            // Called when the user clicks the icon.
             new Notice("This is a notice!");
         });
 
@@ -89,7 +88,7 @@ export default class MyPlugin extends Plugin {
         this.settings = Object.assign(
             {},
             DEFAULT_SETTINGS,
-            (await this.loadData()) as Partial<MyPluginSettings>,
+            (await this.loadData()) as Partial<WeeklyNotesSettings>,
         );
     }
 

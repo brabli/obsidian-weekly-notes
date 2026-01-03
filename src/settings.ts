@@ -1,12 +1,12 @@
 import { type App, PluginSettingTab, Setting } from "obsidian";
 import type MyPlugin from "./main";
 
-export interface MyPluginSettings {
-    mySetting: string;
+export interface WeeklyNotesSettings {
+    titleFormat: string;
 }
 
-export const DEFAULT_SETTINGS: MyPluginSettings = {
-    mySetting: "default",
+export const DEFAULT_SETTINGS: WeeklyNotesSettings = {
+    titleFormat: "YYYY-MM-DD",
 };
 
 export class SampleSettingTab extends PluginSettingTab {
@@ -28,9 +28,9 @@ export class SampleSettingTab extends PluginSettingTab {
             .addText((text) =>
                 text
                     .setPlaceholder("Enter your secret")
-                    .setValue(this.plugin.settings.mySetting)
+                    .setValue(this.plugin.settings.titleFormat)
                     .onChange(async (value) => {
-                        this.plugin.settings.mySetting = value;
+                        this.plugin.settings.titleFormat = value;
                         await this.plugin.saveSettings();
                     }),
             );

@@ -9,7 +9,7 @@ export const DEFAULT_SETTINGS: WeeklyNotesSettings = {
     titleFormat: "YYYY-MM-DD",
 };
 
-export class SampleSettingTab extends PluginSettingTab {
+export class WeeklyNotesSettingsTab extends PluginSettingTab {
     plugin: MyPlugin;
 
     constructor(app: App, plugin: MyPlugin) {
@@ -23,8 +23,8 @@ export class SampleSettingTab extends PluginSettingTab {
         containerEl.empty();
 
         new Setting(containerEl)
-            .setName("Settings #1")
-            .setDesc("It's a secret")
+            .setName("Please enter a format.")
+            .setDesc("Or else.")
             .addText((text) =>
                 text
                     .setPlaceholder("Enter your secret")

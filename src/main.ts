@@ -1,8 +1,8 @@
 import { Notice, Plugin, TFile } from "obsidian";
 import {
     DEFAULT_SETTINGS,
-    WeeklyNotesSettingsTab,
     type WeeklyNotesSettings,
+    WeeklyNotesSettingsTab,
 } from "./settings";
 
 export default class WeeklyNotes extends Plugin {

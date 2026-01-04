@@ -1,4 +1,4 @@
-import { Notice, Plugin, TFile } from "obsidian";
+import { MarkdownRenderer, Notice, Plugin, TFile } from "obsidian";
 import {
     DEFAULT_SETTINGS,
     type WeeklyNotesSettings,
@@ -21,16 +21,18 @@ export default class WeeklyNotes extends Plugin {
 
                 const existingFile = this.app.vault.getFileByPath(filepath);
 
-                console.debug(existingFile);
-
+                // File already exists
                 if (existingFile instanceof TFile) {
-                    new Notice("File already exists, backing down.");
                     const leaf = this.app.workspace.getLeaf();
                     await leaf.openFile(existingFile);
                     return;
                 }
 
-                console.debug(existingFile, filepath);
+                const template = this.settings.templatePath;
+                const templateFile = this.app.vault.getFileByPath(template);
+
+                // const constent = MarkdownRenderer.render(template);
+                console.debug(templateFile);
 
                 const file = await this.app.vault.create(filepath, "");
                 const leaf = this.app.workspace.getLeaf();

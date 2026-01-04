@@ -65,12 +65,10 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                     dropdown.addOption(path, path);
                 });
 
-                dropdown
-                    .setValue(this.plugin.settings.templatePath)
-                    .onChange(async (value) => {
-                        this.plugin.settings.templatePath = value;
-                        await this.plugin.saveSettings();
-                    });
+                dropdown.setValue(this.plugin.settings.templatePath).onChange(async (value) => {
+                    this.plugin.settings.templatePath = value;
+                    await this.plugin.saveSettings();
+                });
             });
     }
 }

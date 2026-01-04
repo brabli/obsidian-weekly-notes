@@ -1,9 +1,5 @@
 import { MarkdownRenderer, Notice, Plugin, TFile } from "obsidian";
-import {
-    DEFAULT_SETTINGS,
-    type WeeklyNotesSettings,
-    WeeklyNotesSettingsTab,
-} from "./settings";
+import { DEFAULT_SETTINGS, type WeeklyNotesSettings, WeeklyNotesSettingsTab } from "./settings";
 
 export default class WeeklyNotes extends Plugin {
     settings: WeeklyNotesSettings;
@@ -11,59 +7,51 @@ export default class WeeklyNotes extends Plugin {
     async onload() {
         await this.loadSettings();
 
-        const createWeeklyNote = async () => {
-            try {
-                const name = window
-                    .moment()
-                    .startOf("isoWeek")
-                    .format(this.settings.titleFormat);
-                const filepath = `${name}.md`;
-
-                const existingFile = this.app.vault.getFileByPath(filepath);
-
-                // File already exists
-                if (existingFile instanceof TFile) {
-                    const leaf = this.app.workspace.getLeaf();
-                    await leaf.openFile(existingFile);
-                    return;
-                }
-
-                const template = this.settings.templatePath;
-                const templateFile = this.app.vault.getFileByPath(template);
-
-                // const constent = MarkdownRenderer.render(template);
-                console.debug(templateFile);
-
-                const file = await this.app.vault.create(filepath, "");
-                const leaf = this.app.workspace.getLeaf();
-                await leaf.openFile(file);
-            } catch (e: unknown) {
-                const error = e as Error;
-                new Notice(`[ERROR]: ${error.message}`);
-            }
-        };
-
         this.addCommand({
             id: "create-weekly-note",
             name: "Create weekly note",
-            callback: createWeeklyNote,
+            callback: this.createWeeklyNote,
         });
 
-        // This creates an icon in the left ribbon.
-        this.addRibbonIcon("dice", "Open weekly note", (_event: MouseEvent) => {
-            createWeeklyNote();
+        this.addRibbonIcon("week", "Open weekly note", (_event: MouseEvent) => {
+            this.createWeeklyNote();
         });
 
-        // This adds a settings tab so the user can configure various aspects of the plugin
         this.addSettingTab(new WeeklyNotesSettingsTab(this.app, this));
-
-        // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-        this.registerInterval(
-            window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000),
-        );
     }
 
-    onunload() {}
+    async createWeeklyNote() {
+        try {
+            const weeklyNoteTitle = window
+                .moment()
+                .startOf("isoWeek")
+                .format(this.settings.titleFormat);
+
+            const weeklyNoteFilepath = `${weeklyNoteTitle}.md`;
+
+            const existingWeeklyNote = this.app.vault.getFileByPath(weeklyNoteFilepath);
+
+            const templatePath = this.settings.templatePath;
+            const templateFile = this.app.vault.getFileByPath(templatePath);
+
+            // const constent = MarkdownRenderer.render(template);
+            console.debug(templateFile);
+
+            // File already exists
+            if (existingWeeklyNote instanceof TFile) {
+                const leaf = this.app.workspace.getLeaf();
+                await leaf.openFile(existingWeeklyNote);
+                return;
+            }
+
+            const file = await this.app.vault.create(weeklyNoteFilepath, "");
+            const leaf = this.app.workspace.getLeaf();
+            await leaf.openFile(file);
+        } catch (e: unknown) {
+            const error = e as Error;
+            new Notice(`[ERROR]: ${error.message}`);
+        }
+    }
 
     async loadSettings() {
         this.settings = Object.assign(

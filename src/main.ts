@@ -13,7 +13,7 @@ export default class WeeklyNotes extends Plugin {
             callback: this.createWeeklyNote,
         });
 
-        this.addRibbonIcon("week", "Open weekly note", (_event: MouseEvent) => {
+        this.addRibbonIcon("calendar-days", "Open weekly note", (_event: MouseEvent) => {
             this.createWeeklyNote();
         });
 

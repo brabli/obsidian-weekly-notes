@@ -25,6 +25,7 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
         containerEl.empty();
 
         const dateDesc = document.createDocumentFragment();
+
         dateDesc.appendText("For a list of all available tokens, see the ");
         dateDesc.createEl("a", {
             text: "format reference",
@@ -35,7 +36,9 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
         });
         dateDesc.createEl("br");
         dateDesc.appendText("Your current syntax looks like this: ");
+
         const dateSampleEl = dateDesc.createEl("b", "u-pop");
+
         new Setting(containerEl)
             .setName("Date format")
             .setDesc(dateDesc)
@@ -56,8 +59,8 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
             .addDropdown((dropdown) => {
                 dropdown.addOption("", "No template selected");
 
-                this.app.vault.getMarkdownFiles().forEach(({ name: filename }) => {
-                    dropdown.addOption(filename, filename);
+                this.app.vault.getMarkdownFiles().forEach((markdownFile) => {
+                    dropdown.addOption(markdownFile.path, markdownFile.path);
                 });
 
                 dropdown.setValue(this.plugin.settings.templatePath).onChange(async (value) => {

@@ -1,5 +1,6 @@
 import { Notice, Plugin, TFile } from "obsidian";
 import { DEFAULT_SETTINGS, type WeeklyNotesSettings, WeeklyNotesSettingsTab } from "./settings";
+import { replaceFileVars } from "utils";
 
 export default class WeeklyNotes extends Plugin {
     settings: WeeklyNotesSettings;
@@ -30,28 +31,29 @@ export default class WeeklyNotes extends Plugin {
                 .format(this.settings.titleFormat);
 
             const weeklyNoteFilepath = `${weeklyNoteTitle}.md`;
-
             const existingWeeklyNote = this.app.vault.getFileByPath(weeklyNoteFilepath);
 
-            const templatePath = this.settings.templatePath;
-            const templateFile = this.app.vault.getFileByPath(templatePath);
-
-            if (null === templateFile) {
-                new Notice(`Template file not found "${this.settings.templatePath}".`);
-            } else {
-                const _content = this.app.vault.read(templateFile);
-            }
-
-            const _content = templateFile;
-
-            // File already exists
+            // File already exists, so just open it
             if (existingWeeklyNote instanceof TFile) {
                 const leaf = this.app.workspace.getLeaf();
                 await leaf.openFile(existingWeeklyNote);
                 return;
             }
 
-            const file = await this.app.vault.create(weeklyNoteFilepath, "");
+            const templatePath = this.settings.templatePath;
+            const templateFile = this.app.vault.getFileByPath(templatePath);
+
+            let content = "";
+
+            if (null === templateFile) {
+                new Notice(`Template file not found "${this.settings.templatePath}".`);
+            } else {
+                content = await this.app.vault.read(templateFile);
+            }
+
+            content = await replaceFileVars(this.app, content, weeklyNoteTitle);
+
+            const file = await this.app.vault.create(weeklyNoteFilepath, content);
             const leaf = this.app.workspace.getLeaf();
             await leaf.openFile(file);
         } catch (e: unknown) {

@@ -1,4 +1,4 @@
-import { MarkdownRenderer, Notice, Plugin, TFile } from "obsidian";
+import { Notice, Plugin, TFile } from "obsidian";
 import { DEFAULT_SETTINGS, type WeeklyNotesSettings, WeeklyNotesSettingsTab } from "./settings";
 
 export default class WeeklyNotes extends Plugin {
@@ -10,7 +10,9 @@ export default class WeeklyNotes extends Plugin {
         this.addCommand({
             id: "create-weekly-note",
             name: "Create weekly note",
-            callback: this.createWeeklyNote,
+            callback: () => {
+                this.createWeeklyNote();
+            },
         });
 
         this.addRibbonIcon("calendar-days", "Open weekly note", (_event: MouseEvent) => {
@@ -34,8 +36,13 @@ export default class WeeklyNotes extends Plugin {
             const templatePath = this.settings.templatePath;
             const templateFile = this.app.vault.getFileByPath(templatePath);
 
-            // const constent = MarkdownRenderer.render(template);
-            console.debug(templateFile);
+            if (null === templateFile) {
+                new Notice(`Template file not found "${this.settings.templatePath}".`);
+            } else {
+                const _content = this.app.vault.read(templateFile);
+            }
+
+            const _content = templateFile;
 
             // File already exists
             if (existingWeeklyNote instanceof TFile) {
@@ -50,6 +57,7 @@ export default class WeeklyNotes extends Plugin {
         } catch (e: unknown) {
             const error = e as Error;
             new Notice(`[ERROR]: ${error.message}`);
+            console.error(error);
         }
     }
 

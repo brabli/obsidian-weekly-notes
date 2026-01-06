@@ -50,19 +50,14 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                     }),
             );
 
-        const markdownFiles = this.app.vault
-            .getFiles()
-            .filter((file) => file.extension === "md")
-            .map((file) => file.path);
-
         new Setting(containerEl)
             .setName("Template file")
             .setDesc("Select the template file to use")
             .addDropdown((dropdown) => {
                 dropdown.addOption("", "No template selected");
 
-                markdownFiles.forEach((path) => {
-                    dropdown.addOption(path, path);
+                this.app.vault.getMarkdownFiles().forEach(({ name: filename }) => {
+                    dropdown.addOption(filename, filename);
                 });
 
                 dropdown.setValue(this.plugin.settings.templatePath).onChange(async (value) => {

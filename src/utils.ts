@@ -1,5 +1,5 @@
 import type { App } from "obsidian";
-import { moment } from "obsidian";
+import { moment, Notice } from "obsidian";
 
 export interface CoreTemplatesPluginConfig {
     dateFormat: string;
@@ -27,31 +27,26 @@ export async function replaceTemplateVariables(
 ): Promise<string> {
     if (!templateContent) return templateContent;
 
-    const coreTemplatesConfigPath = `${app.vault.configDir}/templates.json`;
-
-    let coreTemplatesConfig: { dateFormat: string; timeFormat: string };
+    let coreTemplatesPluginConfig: CoreTemplatesPluginConfig | null = null;
 
     try {
-        const jsonConfig = await app.vault.adapter.read(coreTemplatesConfigPath);
-        coreTemplatesConfig = JSON.parse(jsonConfig);
+        coreTemplatesPluginConfig = await readCoreTemplatesPluginConfig(app);
+        console.debug(coreTemplatesPluginConfig);
     } catch (error) {
-        console.error(
-            `[weekly-notes]: Unable to read core plugin templates config at path: ${coreTemplatesConfigPath}`,
-        );
+        new Notice("Failed to read Template plugin config, but it's ok we'll push through.");
+        console.error(`[weekly-notes]: Failed to read core templates plugin config.`);
         console.log(error);
-
-        return templateContent;
     }
 
     let dateFormat = "YYYY-MM-DD";
     let timeFormat = "HH:mm";
 
-    if (coreTemplatesConfig.timeFormat) {
-        timeFormat = coreTemplatesConfig.timeFormat;
+    if (coreTemplatesPluginConfig?.timeFormat) {
+        timeFormat = coreTemplatesPluginConfig.timeFormat;
     }
 
-    if (coreTemplatesConfig.dateFormat) {
-        dateFormat = coreTemplatesConfig.dateFormat;
+    if (coreTemplatesPluginConfig?.dateFormat) {
+        dateFormat = coreTemplatesPluginConfig.dateFormat;
     }
 
     // Handle one-off format strings such as {{date:YYYY-[W]WW}} or {{time:HH}}
@@ -69,4 +64,10 @@ export async function replaceTemplateVariables(
     templateContent = templateContent.replace(/{{title}}/g, title);
 
     return templateContent;
+}
+
+export async function readCoreTemplatesPluginConfig(app: App): Promise<CoreTemplatesPluginConfig> {
+    const templatesPluginConfigPath = `${app.vault.configDir}/templates.json`;
+    const jsonConfig = await app.vault.adapter.read(templatesPluginConfigPath);
+    return JSON.parse(jsonConfig);
 }

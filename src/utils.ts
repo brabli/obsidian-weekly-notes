@@ -1,6 +1,12 @@
 import type { App } from "obsidian";
 import { moment } from "obsidian";
 
+export interface CoreTemplatesPluginConfig {
+    dateFormat: string;
+    timeFormat: string;
+    folder: string;
+}
+
 /**
  * Replace Obsidian template variables using settings from core Templates plugin if set.
  *

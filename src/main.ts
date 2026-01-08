@@ -1,6 +1,6 @@
 import { Notice, Plugin, TFile } from "obsidian";
 import { DEFAULT_SETTINGS, type WeeklyNotesSettings, WeeklyNotesSettingsTab } from "./settings";
-import { replaceFileVars } from "utils";
+import { replaceTemplateVariables } from "./utils";
 
 export default class WeeklyNotes extends Plugin {
     settings: WeeklyNotesSettings;
@@ -51,7 +51,7 @@ export default class WeeklyNotes extends Plugin {
                 content = await this.app.vault.read(templateFile);
             }
 
-            content = await replaceFileVars(this.app, content, weeklyNoteTitle);
+            content = await replaceTemplateVariables(this.app, content, weeklyNoteTitle);
 
             const file = await this.app.vault.create(weeklyNoteFilepath, content);
             const leaf = this.app.workspace.getLeaf();

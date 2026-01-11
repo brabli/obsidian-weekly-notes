@@ -1,5 +1,6 @@
 import { type App, PluginSettingTab, Setting } from "obsidian";
 import type WeeklyNotes from "./main";
+import { readCoreTemplatesPluginConfig } from "utils";
 
 export interface WeeklyNotesSettings {
     titleFormat: string;
@@ -56,8 +57,15 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
         new Setting(containerEl)
             .setName("Template file")
             .setDesc("Select the template file to use")
-            .addDropdown((dropdown) => {
+            .addDropdown(async (dropdown) => {
                 dropdown.addOption("", "No template selected");
+
+                try {
+                    const coreTemplatesPluginConfig = await readCoreTemplatesPluginConfig(this.app);
+                    // Load template files
+                } catch (e) {
+                    console.log(e);
+                }
 
                 this.app.vault.getMarkdownFiles().forEach((markdownFile) => {
                     dropdown.addOption(markdownFile.path, markdownFile.path);

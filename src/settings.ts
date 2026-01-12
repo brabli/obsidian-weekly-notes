@@ -1,6 +1,6 @@
 import { type App, PluginSettingTab, Setting } from "obsidian";
-import type WeeklyNotes from "./main";
 import { readCoreTemplatesPluginConfig } from "utils";
+import type WeeklyNotes from "./main";
 
 export interface WeeklyNotesSettings {
     titleFormat: string;
@@ -74,6 +74,21 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                 dropdown.setValue(this.plugin.settings.templatePath).onChange(async (value) => {
                     this.plugin.settings.templatePath = value;
                     await this.plugin.saveSettings();
+                });
+            });
+
+        new Setting(containerEl)
+            .setName("Start day")
+            .setDesc("Day of the week to start on")
+            .addDropdown(async (dropdown) => {
+                dropdown.addOptions({
+                    monday: "Monday",
+                    tuesday: "Tuesday",
+                    wednesday: "Wednesday",
+                    thursday: "Thursday",
+                    friday: "Friday",
+                    saturday: "Saturday",
+                    sunday: "Sunday",
                 });
             });
     }

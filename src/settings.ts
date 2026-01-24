@@ -3,11 +3,13 @@ import { readCoreTemplatesPluginConfig, recursivelyFindMarkdownFiles } from "uti
 import type WeeklyNotes from "./main";
 
 export interface WeeklyNotesSettings {
+    startDay: Weekday;
     titleFormat: string;
     templatePath: string;
 }
 
 export const DEFAULT_SETTINGS: WeeklyNotesSettings = {
+    startDay: "Monday",
     titleFormat: "YYYY-MM-DD",
     templatePath: "",
 };

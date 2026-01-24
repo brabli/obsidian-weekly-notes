@@ -2,6 +2,8 @@ import { type App, Notice, PluginSettingTab, Setting } from "obsidian";
 import { readCoreTemplatesPluginConfig, recursivelyFindMarkdownFiles } from "utils";
 import type WeeklyNotes from "./main";
 
+export type Weekday = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday";
+
 export interface WeeklyNotesSettings {
     startDay: Weekday;
     titleFormat: string;

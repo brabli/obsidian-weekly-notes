@@ -87,7 +87,7 @@ export function recursivelyFindMarkdownFiles(directory: TFolder): TFile[] {
     return markdownFiles;
 }
 
-export function weekdayToIndex(weekday: Weekday): number {
+export function weekdayToIsoIndex(weekday: Weekday): number {
     switch (weekday) {
         case "Monday":
             return 1;

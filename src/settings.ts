@@ -51,9 +51,14 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                 momentFormat
                     .setValue(this.plugin.settings.titleFormat)
                     .setSampleEl(dateSampleEl)
-                    .setDefaultFormat("MMMM dd, yyyy")
+                    .setDefaultFormat(DEFAULT_SETTINGS.titleFormat)
                     .onChange(async (value) => {
-                        this.plugin.settings.titleFormat = value;
+                        if ("" === value) {
+                            this.plugin.settings.titleFormat = DEFAULT_SETTINGS.titleFormat;
+                        } else {
+                            this.plugin.settings.titleFormat = value;
+                        }
+
                         await this.plugin.saveSettings();
                     }),
             );

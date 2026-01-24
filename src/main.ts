@@ -33,8 +33,8 @@ export default class WeeklyNotes extends Plugin {
             const weekStart = today.clone().subtract(daysToSubtract, "days").startOf("day");
 
             const weeklyNoteTitle = weekStart.format(this.settings.titleFormat);
-
             const weeklyNoteFilepath = `${weeklyNoteTitle}.md`;
+
             const existingWeeklyNote = this.app.vault.getFileByPath(weeklyNoteFilepath);
 
             // Open the file if it already exists

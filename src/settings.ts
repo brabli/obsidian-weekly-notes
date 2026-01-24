@@ -45,7 +45,7 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
         const dateSampleEl = dateDesc.createEl("b", "u-pop");
 
         new Setting(containerEl)
-            .setName("Date format")
+            .setName("Title format")
             .setDesc(dateDesc)
             .addMomentFormat((momentFormat) =>
                 momentFormat
@@ -124,7 +124,7 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
 
         new Setting(containerEl)
             .setName("Start day")
-            .setDesc("Day of the week to start on")
+            .setDesc("Day of the week to start on.")
             .addDropdown(async (dropdown) => {
                 dropdown.onChange(async (value: Weekday) => {
                     this.plugin.settings.startDay = value;

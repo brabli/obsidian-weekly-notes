@@ -25,7 +25,9 @@ export async function replaceTemplateVariables(
     templateContent: string,
     title: string,
 ): Promise<string> {
-    if (!templateContent) return templateContent;
+    if (!templateContent) {
+        return templateContent;
+    }
 
     let coreTemplatesPluginConfig: CoreTemplatesPluginConfig | null = null;
 

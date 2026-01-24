@@ -72,9 +72,14 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                             this.plugin.settings.templatePath = value;
                         });
                     }
-
-                    await this.plugin.saveSettings();
                 };
+
+                dropdown.onChange(async (value) => {
+                    console.log(`Value: ${value}`);
+                    this.plugin.settings.templatePath = value;
+                    await this.plugin.saveSettings();
+                    console.log("Saved.");
+                });
 
                 dropdown.addOption("", "No template selected");
 
@@ -87,12 +92,14 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                     console.error("Error while finding core Templates plugin configuration.");
                     console.error(e);
                     await useAllMarkdownFiles();
+                    dropdown.setValue(this.plugin.settings.templatePath);
                     return;
                 }
 
                 if (null === coreTemplatesPluginConfig) {
                     new Notice(`Core Templates plugin configuration was not found.`);
                     await useAllMarkdownFiles();
+                    dropdown.setValue(this.plugin.settings.templatePath);
                     return;
                 }
 
@@ -102,6 +109,7 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                 if (null === templatesDirectory) {
                     new Notice(`Templates directory "${templatesDirectoryPath}" was not found.`);
                     await useAllMarkdownFiles();
+                    dropdown.setValue(this.plugin.settings.templatePath);
                     return;
                 }
 
@@ -110,21 +118,30 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                 for (const file of templateFiles) {
                     dropdown.addOption(file.path, file.path);
                 }
+
+                dropdown.setValue(this.plugin.settings.templatePath);
             });
 
         new Setting(containerEl)
             .setName("Start day")
             .setDesc("Day of the week to start on")
             .addDropdown(async (dropdown) => {
-                dropdown.addOptions({
-                    monday: "Monday",
-                    tuesday: "Tuesday",
-                    wednesday: "Wednesday",
-                    thursday: "Thursday",
-                    friday: "Friday",
-                    saturday: "Saturday",
-                    sunday: "Sunday",
+                dropdown.onChange(async (value: Weekday) => {
+                    this.plugin.settings.startDay = value;
+                    await this.plugin.saveSettings();
                 });
+
+                dropdown.addOptions({
+                    Monday: "Monday",
+                    Tuesday: "Tuesday",
+                    Wednesday: "Wednesday",
+                    Thursday: "Thursday",
+                    Friday: "Friday",
+                    Saturday: "Saturday",
+                    Sunday: "Sunday",
+                });
+
+                dropdown.setValue(this.plugin.settings.startDay);
             });
     }
 }

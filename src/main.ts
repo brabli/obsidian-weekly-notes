@@ -1,4 +1,4 @@
-import { Notice, Plugin, TFile } from "obsidian";
+import { normalizePath, Notice, Plugin, TFile } from "obsidian";
 import { DEFAULT_SETTINGS, type WeeklyNotesSettings, WeeklyNotesSettingsTab } from "./settings";
 import { replaceTemplateVariables, weekdayToIsoIndex } from "./utils";
 
@@ -33,7 +33,7 @@ export default class WeeklyNotes extends Plugin {
             const weekStart = today.clone().subtract(daysToSubtract, "days").startOf("day");
 
             const weeklyNoteTitle = weekStart.format(this.settings.titleFormat);
-            const weeklyNoteFilepath = `${weeklyNoteTitle}.md`;
+            const weeklyNoteFilepath = normalizePath(`${weeklyNoteTitle}.md`);
 
             const existingWeeklyNote = this.app.vault.getFileByPath(weeklyNoteFilepath);
 

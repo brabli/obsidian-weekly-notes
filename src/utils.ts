@@ -1,4 +1,5 @@
-import { type App, moment, Notice, TFile, TFolder } from "obsidian";
+import { type App, moment, Notice, TFile, TFolder, normalizePath } from "obsidian";
+import { normalize } from "path";
 import type { Weekday } from "settings";
 
 export interface CoreTemplatesPluginConfig {
@@ -65,7 +66,7 @@ export async function replaceTemplateVariables(app: App, templateContent: string
 }
 
 export async function readCoreTemplatesPluginConfig(app: App): Promise<CoreTemplatesPluginConfig> {
-    const templatesPluginConfigPath = `${app.vault.configDir}/templates.json`;
+    const templatesPluginConfigPath = normalizePath(`${app.vault.configDir}/templates.json`);
     const jsonConfig = await app.vault.adapter.read(templatesPluginConfigPath);
     return JSON.parse(jsonConfig);
 }

@@ -1,6 +1,6 @@
 import { Notice, Plugin, TFile } from "obsidian";
 import { DEFAULT_SETTINGS, type WeeklyNotesSettings, WeeklyNotesSettingsTab } from "./settings";
-import { replaceTemplateVariables } from "./utils";
+import { replaceTemplateVariables, weekdayToIsoIndex } from "./utils";
 
 export default class WeeklyNotes extends Plugin {
     settings: WeeklyNotesSettings;
@@ -25,10 +25,14 @@ export default class WeeklyNotes extends Plugin {
 
     async createWeeklyNote() {
         try {
-            const weeklyNoteTitle = window
-                .moment()
-                .startOf("isoWeek")
-                .format(this.settings.titleFormat);
+            const startDay = this.settings.startDay;
+            const startDayIndex = weekdayToIsoIndex(startDay);
+            const today = window.moment();
+            const isoWeekdayIndex = today.weekday() + 1; // momentjs uses 1-7, ISO 8601 uses 0-6.
+            const daysToSubtract = (isoWeekdayIndex - startDayIndex + 7) % 7;
+            const weekStart = today.clone().subtract(daysToSubtract, "days").startOf("day");
+
+            const weeklyNoteTitle = weekStart.format(this.settings.titleFormat);
 
             const weeklyNoteFilepath = `${weeklyNoteTitle}.md`;
             const existingWeeklyNote = this.app.vault.getFileByPath(weeklyNoteFilepath);

@@ -46,7 +46,9 @@ export default class WeeklyNotes extends Plugin {
             let content = "";
 
             if (null === templateFile) {
-                new Notice(`Template file not found "${this.settings.templatePath}".`);
+                if ("" !== templatePath) {
+                    new Notice(`Template file not found "${this.settings.templatePath}".`);
+                }
             } else {
                 content = await this.app.vault.read(templateFile);
             }
@@ -64,11 +66,7 @@ export default class WeeklyNotes extends Plugin {
     }
 
     async loadSettings() {
-        this.settings = Object.assign(
-            {},
-            DEFAULT_SETTINGS,
-            (await this.loadData()) as Partial<WeeklyNotesSettings>,
-        );
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, (await this.loadData()) as Partial<WeeklyNotesSettings>);
     }
 
     async saveSettings() {

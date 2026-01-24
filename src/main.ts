@@ -76,8 +76,8 @@ export default class WeeklyNotes extends Plugin {
             await leaf.openFile(file);
         } catch (e: unknown) {
             const error = e as Error;
-            new Notice(`[ERROR]: ${error.message}`);
             console.error(error);
+            new Notice(`[ERROR]: ${error.message}`);
         }
     }
 

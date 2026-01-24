@@ -75,10 +75,8 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                 };
 
                 dropdown.onChange(async (value) => {
-                    console.log(`Value: ${value}`);
                     this.plugin.settings.templatePath = value;
                     await this.plugin.saveSettings();
-                    console.log("Saved.");
                 });
 
                 dropdown.addOption("", "No template selected");

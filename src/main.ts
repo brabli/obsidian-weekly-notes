@@ -49,7 +49,7 @@ export default class WeeklyNotes extends Plugin {
                 });
 
                 if (!opened) {
-                    const leaf = this.app.workspace.getLeaf();
+                    const leaf = this.app.workspace.getLeaf(true); // `true` opens leaf in new tab
                     await leaf.openFile(existingWeeklyNote);
                 }
 

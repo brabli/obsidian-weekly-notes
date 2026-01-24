@@ -80,9 +80,7 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                         await this.plugin.saveSettings();
                     });
                 } else {
-                    const dir = this.app.vault.getAbstractFileByPath(
-                        coreTemplatesPluginConfig.folder,
-                    );
+                    const dir = this.app.vault.getAbstractFileByPath(coreTemplatesPluginConfig.folder);
 
                     if (dir instanceof TFolder) {
                         const templateFiles = recursivelyFindMarkdownFiles(dir);

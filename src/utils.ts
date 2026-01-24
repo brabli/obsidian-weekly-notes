@@ -1,5 +1,4 @@
-import { type App, moment, Notice, TFile, TFolder, normalizePath } from "obsidian";
-import { normalize } from "path";
+import { type App, moment, Notice, normalizePath, TFile, TFolder } from "obsidian";
 import type { Weekday } from "settings";
 
 export interface CoreTemplatesPluginConfig {

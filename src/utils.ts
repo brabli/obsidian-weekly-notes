@@ -1,5 +1,5 @@
-import { App, TFile, TFolder } from "obsidian";
-import { moment, Notice } from "obsidian";
+import { type App, moment, Notice, TFile, TFolder } from "obsidian";
+import type { Weekday } from "settings";
 
 export interface CoreTemplatesPluginConfig {
     dateFormat: string;
@@ -85,4 +85,23 @@ export function recursivelyFindMarkdownFiles(directory: TFolder): TFile[] {
     }
 
     return markdownFiles;
+}
+
+export function weekdayToIndex(weekday: Weekday): number {
+    switch (weekday) {
+        case "Monday":
+            return 1;
+        case "Tuesday":
+            return 2;
+        case "Wednesday":
+            return 3;
+        case "Thursday":
+            return 4;
+        case "Friday":
+            return 5;
+        case "Saturday":
+            return 6;
+        case "Sunday":
+            return 0;
+    }
 }

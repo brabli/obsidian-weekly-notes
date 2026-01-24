@@ -1,4 +1,4 @@
-import type { App } from "obsidian";
+import { App, TFile, TFolder } from "obsidian";
 import { moment, Notice } from "obsidian";
 
 export interface CoreTemplatesPluginConfig {
@@ -72,4 +72,21 @@ export async function readCoreTemplatesPluginConfig(app: App): Promise<CoreTempl
     const templatesPluginConfigPath = `${app.vault.configDir}/templates.json`;
     const jsonConfig = await app.vault.adapter.read(templatesPluginConfigPath);
     return JSON.parse(jsonConfig);
+}
+
+export function recursivelyFindMarkdownFiles(directory: TFolder): TFile[] {
+    const markdownFiles = [];
+
+    for (const child of directory.children) {
+        if (child instanceof TFile && "md" === child.extension) {
+            markdownFiles.push(child);
+        }
+
+        if (child instanceof TFolder) {
+            const children = recursivelyFindMarkdownFiles(child);
+            markdownFiles.push(...children);
+        }
+    }
+
+    return markdownFiles;
 }

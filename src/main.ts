@@ -37,10 +37,22 @@ export default class WeeklyNotes extends Plugin {
             const weeklyNoteFilepath = `${weeklyNoteTitle}.md`;
             const existingWeeklyNote = this.app.vault.getFileByPath(weeklyNoteFilepath);
 
-            // File already exists, so just open it
+            // Open the file if it already exists
             if (existingWeeklyNote instanceof TFile) {
-                const leaf = this.app.workspace.getLeaf();
-                await leaf.openFile(existingWeeklyNote);
+                let opened = false;
+
+                this.app.workspace.iterateRootLeaves(async (leaf) => {
+                    if (weeklyNoteTitle === leaf.getDisplayText()) {
+                        this.app.workspace.setActiveLeaf(leaf);
+                        opened = true;
+                    }
+                });
+
+                if (!opened) {
+                    const leaf = this.app.workspace.getLeaf();
+                    await leaf.openFile(existingWeeklyNote);
+                }
+
                 return;
             }
 

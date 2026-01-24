@@ -1,5 +1,5 @@
-import { type App, PluginSettingTab, Setting } from "obsidian";
-import { readCoreTemplatesPluginConfig } from "utils";
+import { type App, PluginSettingTab, Setting, TFolder } from "obsidian";
+import { readCoreTemplatesPluginConfig, recursivelyFindMarkdownFiles } from "utils";
 import type WeeklyNotes from "./main";
 
 export interface WeeklyNotesSettings {
@@ -56,25 +56,42 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
 
         new Setting(containerEl)
             .setName("Template file")
-            .setDesc("Select the template file to use")
+            .setDesc("Select the template file to use.")
             .addDropdown(async (dropdown) => {
                 dropdown.addOption("", "No template selected");
 
+                let coreTemplatesPluginConfig = null;
+
                 try {
-                    const coreTemplatesPluginConfig = await readCoreTemplatesPluginConfig(this.app);
-                    // Load template files
+                    coreTemplatesPluginConfig = await readCoreTemplatesPluginConfig(this.app);
                 } catch (e) {
+                    new Notification("Failed to find core Templates plugin configuration.");
                     console.log(e);
                 }
 
-                this.app.vault.getMarkdownFiles().forEach((markdownFile) => {
-                    dropdown.addOption(markdownFile.path, markdownFile.path);
-                });
+                // Couldn't find a Templates directory; list all markdown files as options.
+                if (null === coreTemplatesPluginConfig) {
+                    this.app.vault.getMarkdownFiles().forEach((markdownFile) => {
+                        dropdown.addOption(markdownFile.path, markdownFile.path);
+                    });
 
-                dropdown.setValue(this.plugin.settings.templatePath).onChange(async (value) => {
-                    this.plugin.settings.templatePath = value;
-                    await this.plugin.saveSettings();
-                });
+                    dropdown.setValue(this.plugin.settings.templatePath).onChange(async (value) => {
+                        this.plugin.settings.templatePath = value;
+                        await this.plugin.saveSettings();
+                    });
+                } else {
+                    const dir = this.app.vault.getAbstractFileByPath(
+                        coreTemplatesPluginConfig.folder,
+                    );
+
+                    if (dir instanceof TFolder) {
+                        const templateFiles = recursivelyFindMarkdownFiles(dir);
+
+                        for (const file of templateFiles) {
+                            dropdown.addOption(file.path, file.path);
+                        }
+                    }
+                }
             });
 
         new Setting(containerEl)

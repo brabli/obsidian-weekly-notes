@@ -20,11 +20,7 @@ export interface CoreTemplatesPluginConfig {
  *
  * @returns The template content with the variables replaced
  */
-export async function replaceTemplateVariables(
-    app: App,
-    templateContent: string,
-    title: string,
-): Promise<string> {
+export async function replaceTemplateVariables(app: App, templateContent: string, title: string): Promise<string> {
     if (!templateContent) {
         return templateContent;
     }

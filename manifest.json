@@ -1,7 +1,7 @@
 {
     "id": "weekly-notes",
     "name": "Weekly notes",
-    "version": "1.0.0-beta.2",
+    "version": "1.0.0-beta.3",
     "minAppVersion": "0.15.0",
     "description": "Create notes on a weekly basis, starting on a weekday of your choice.",
     "author": "brabli",

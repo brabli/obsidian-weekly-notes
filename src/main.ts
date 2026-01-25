@@ -32,8 +32,11 @@ export default class WeeklyNotes extends Plugin {
             const daysToSubtract = (isoWeekdayIndex - startDayIndex + 7) % 7;
             let weekStart = today.clone().subtract(daysToSubtract, "days").startOf("day");
 
+            new Notice("About to check changing day.");
+
             // Workaround for Android issue where the day is off by one
             if (weekStart.format("dddd") !== this.settings.startDay) {
+                new Notice("Changind day.");
                 weekStart = weekStart.clone().add(1, "days").startOf("day");
             }
 

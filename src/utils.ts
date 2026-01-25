@@ -29,11 +29,9 @@ export async function replaceTemplateVariables(app: App, templateContent: string
 
     try {
         coreTemplatesPluginConfig = await readCoreTemplatesPluginConfig(app);
-        console.debug(coreTemplatesPluginConfig);
     } catch (error) {
+        console.error(error);
         new Notice("Failed to read Template plugin config, but it's ok we'll push through.");
-        console.error(`[weekly-notes]: Failed to read core templates plugin config.`);
-        console.log(error);
     }
 
     let dateFormat = "YYYY-MM-DD";

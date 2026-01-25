@@ -32,13 +32,11 @@ export default class WeeklyNotes extends Plugin {
             const daysToSubtract = (isoWeekdayIndex - startDayIndex + 7) % 7;
             let weekStart = today.clone().subtract(daysToSubtract, "days").startOf("day");
 
-            new Notice("About to check changing day.");
+            const weekStartDayName = weekStart.format("dddd");
 
-            // Workaround for Android issue where the day is off by one
-            if (weekStart.format("dddd") !== this.settings.startDay) {
-                new Notice("Changind day.");
-                const name = weekStart.format("dddd");
-                if (name === "Sunday") {
+            // Workaround for an Android issue where the start day is off by one.
+            if (weekStartDayName !== this.settings.startDay) {
+                if (weekStartDayName === "Sunday") {
                     weekStart = weekStart.clone().subtract(6, "days").startOf("day");
                 } else {
                     weekStart = weekStart.clone().add(1, "days").startOf("day");
@@ -83,13 +81,6 @@ export default class WeeklyNotes extends Plugin {
             }
 
             content = await replaceTemplateVariables(this.app, content, weeklyNoteTitle);
-
-            const startDayName = weekStart.format("dddd");
-            const msg1 = `\nDetected start day: ${startDayName}`;
-            const msg2 = `\nSettings start day: ${startDay}`;
-            const msg3 = `\nBeta 4.`;
-
-            content = `${content}${msg1}${msg2}${msg3}`;
 
             const file = await this.app.vault.create(weeklyNoteFilepath, content);
             const leaf = this.app.workspace.getLeaf();

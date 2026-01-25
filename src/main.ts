@@ -82,8 +82,9 @@ export default class WeeklyNotes extends Plugin {
             const startDayName = weekStart.format("dddd");
             const msg1 = `\nDetected start day: ${startDayName}`;
             const msg2 = `\nSettings start day: ${startDay}`;
+            const msg3 = `\nBeta 3.`;
 
-            content = `${content}${msg1}${msg2}`;
+            content = `${content}${msg1}${msg2}${msg3}`;
 
             const file = await this.app.vault.create(weeklyNoteFilepath, content);
             const leaf = this.app.workspace.getLeaf();

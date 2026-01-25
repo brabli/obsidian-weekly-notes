@@ -30,7 +30,12 @@ export default class WeeklyNotes extends Plugin {
             const today = window.moment();
             const isoWeekdayIndex = today.weekday() + 1; // momentjs uses 1-7, ISO 8601 uses 0-6.
             const daysToSubtract = (isoWeekdayIndex - startDayIndex + 7) % 7;
-            const weekStart = today.clone().subtract(daysToSubtract, "days").startOf("day");
+            let weekStart = today.clone().subtract(daysToSubtract, "days").startOf("day");
+
+            // Workaround for Android issue where the day is off by one
+            if (weekStart.format("dddd") !== this.settings.startDay) {
+                weekStart = weekStart.clone().add(1, "days").startOf("day");
+            }
 
             const weeklyNoteTitle = weekStart.format(this.settings.titleFormat);
             const weeklyNoteFilepath = normalizePath(`${weeklyNoteTitle}.md`);

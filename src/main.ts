@@ -37,7 +37,12 @@ export default class WeeklyNotes extends Plugin {
             // Workaround for Android issue where the day is off by one
             if (weekStart.format("dddd") !== this.settings.startDay) {
                 new Notice("Changind day.");
-                weekStart = weekStart.clone().add(1, "days").startOf("day");
+                const name = weekStart.format("dddd");
+                if (name === "Sunday") {
+                    weekStart = weekStart.clone().subtract(6, "days").startOf("day");
+                } else {
+                    weekStart = weekStart.clone().add(1, "days").startOf("day");
+                }
             }
 
             const weeklyNoteTitle = weekStart.format(this.settings.titleFormat);
@@ -82,7 +87,7 @@ export default class WeeklyNotes extends Plugin {
             const startDayName = weekStart.format("dddd");
             const msg1 = `\nDetected start day: ${startDayName}`;
             const msg2 = `\nSettings start day: ${startDay}`;
-            const msg3 = `\nBeta 3.`;
+            const msg3 = `\nBeta 4.`;
 
             content = `${content}${msg1}${msg2}${msg3}`;
 

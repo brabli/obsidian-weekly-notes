@@ -11,13 +11,19 @@ export default class WeeklyNotes extends Plugin {
         this.addCommand({
             id: "create-weekly-note",
             name: "Create weekly note",
-            callback: () => {
-                this.createWeeklyNote();
+            callback: async () => {
+                await this.createWeeklyNote().catch((e) => {
+                    console.error(e);
+                    new Notice("Error creating weekly note.");
+                });
             },
         });
 
-        this.addRibbonIcon("calendar-days", "Open weekly note", (_event: MouseEvent) => {
-            this.createWeeklyNote();
+        this.addRibbonIcon("calendar-days", "Open weekly note", async (_event: MouseEvent) => {
+            await this.createWeeklyNote().catch((e) => {
+                console.error(e);
+                new Notice("Error creating weekly note.");
+            });
         });
 
         this.addSettingTab(new WeeklyNotesSettingsTab(this.app, this));
@@ -52,7 +58,7 @@ export default class WeeklyNotes extends Plugin {
             if (existingWeeklyNote instanceof TFile) {
                 let opened = false;
 
-                this.app.workspace.iterateRootLeaves(async (leaf) => {
+                this.app.workspace.iterateRootLeaves((leaf) => {
                     if (weeklyNoteTitle === leaf.getDisplayText()) {
                         this.app.workspace.setActiveLeaf(leaf);
                         opened = true;

@@ -31,7 +31,7 @@ export async function replaceTemplateVariables(app: App, templateContent: string
         coreTemplatesPluginConfig = await readCoreTemplatesPluginConfig(app);
     } catch (error) {
         console.error(error);
-        new Notice("Failed to read Template plugin config, but it's ok we'll push through.");
+        new Notice("Failed to read template plugin config.");
     }
 
     let dateFormat = "YYYY-MM-DD";
@@ -65,7 +65,9 @@ export async function replaceTemplateVariables(app: App, templateContent: string
 export async function readCoreTemplatesPluginConfig(app: App): Promise<CoreTemplatesPluginConfig> {
     const templatesPluginConfigPath = normalizePath(`${app.vault.configDir}/templates.json`);
     const jsonConfig = await app.vault.adapter.read(templatesPluginConfigPath);
-    return JSON.parse(jsonConfig);
+    const parsedJson = JSON.parse(jsonConfig) as CoreTemplatesPluginConfig;
+
+    return parsedJson;
 }
 
 export function recursivelyFindMarkdownFiles(directory: TFolder): TFile[] {

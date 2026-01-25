@@ -33,7 +33,7 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
 
         dateDesc.appendText("For a list of all available tokens, see the ");
         dateDesc.createEl("a", {
-            text: "format reference",
+            text: "Format reference",
             attr: {
                 href: "https://momentjs.com/docs/#/displaying/format/",
                 target: "_blank",
@@ -59,7 +59,10 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                             this.plugin.settings.titleFormat = value;
                         }
 
-                        await this.plugin.saveSettings();
+                        await this.plugin.saveSettings().catch((e) => {
+                            console.error(e);
+                            new Notice("Error saving config.");
+                        });
                     }),
             );
 
@@ -67,13 +70,13 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
             .setName("Template file")
             .setDesc("Select the template file to use.")
             .addDropdown(async (dropdown) => {
-                const useAllMarkdownFiles = async () => {
+                const useAllMarkdownFiles = () => {
                     const allMarkdownFiles = this.app.vault.getMarkdownFiles();
 
                     for (const file of allMarkdownFiles) {
                         dropdown.addOption(file.path, file.path);
 
-                        dropdown.setValue(this.plugin.settings.templatePath).onChange(async (value) => {
+                        dropdown.setValue(this.plugin.settings.templatePath).onChange((value) => {
                             this.plugin.settings.templatePath = value;
                         });
                     }
@@ -81,7 +84,10 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
 
                 dropdown.onChange(async (value) => {
                     this.plugin.settings.templatePath = value;
-                    await this.plugin.saveSettings();
+                    await this.plugin.saveSettings().catch((e) => {
+                        console.error(e);
+                        new Notice("Error saving config.");
+                    });
                 });
 
                 dropdown.addOption("", "No template selected");
@@ -91,17 +97,17 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                 try {
                     coreTemplatesPluginConfig = await readCoreTemplatesPluginConfig(this.app);
                 } catch (e) {
-                    new Notice("Error while finding core Templates plugin configuration.");
-                    console.error("Error while finding core Templates plugin configuration.");
+                    new Notice("Error while finding core templates plugin configuration.");
+                    console.error("Error while finding core templates plugin configuration.");
                     console.error(e);
-                    await useAllMarkdownFiles();
+                    useAllMarkdownFiles();
                     dropdown.setValue(this.plugin.settings.templatePath);
                     return;
                 }
 
                 if (null === coreTemplatesPluginConfig) {
-                    new Notice(`Core Templates plugin configuration was not found.`);
-                    await useAllMarkdownFiles();
+                    new Notice(`Core templates plugin configuration was not found.`);
+                    useAllMarkdownFiles();
                     dropdown.setValue(this.plugin.settings.templatePath);
                     return;
                 }
@@ -111,7 +117,7 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
 
                 if (null === templatesDirectory) {
                     new Notice(`Templates directory "${templatesDirectoryPath}" was not found.`);
-                    await useAllMarkdownFiles();
+                    useAllMarkdownFiles();
                     dropdown.setValue(this.plugin.settings.templatePath);
                     return;
                 }

@@ -102,6 +102,6 @@ export function weekdayToIsoIndex(weekday: Weekday): number {
         case "Saturday":
             return 6;
         case "Sunday":
-            return 0;
+            return 7;
     }
 }

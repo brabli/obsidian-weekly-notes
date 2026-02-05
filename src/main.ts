@@ -1,4 +1,4 @@
-import { Notice, normalizePath, Plugin, TFile } from "obsidian";
+import { Notice, normalizePath, Platform, Plugin, TFile } from "obsidian";
 import { DEFAULT_SETTINGS, type WeeklyNotesSettings, WeeklyNotesSettingsTab } from "./settings";
 import { replaceTemplateVariables, weekdayToIsoIndex } from "./utils";
 
@@ -34,21 +34,14 @@ export default class WeeklyNotes extends Plugin {
             const startDay = this.settings.startDay;
             const startDayIndex = weekdayToIsoIndex(startDay);
             const today = window.moment();
-            const isoWeekdayIndex = today.weekday() + 1; // momentjs uses 1-7, ISO 8601 uses 0-6.
-            const daysToSubtract = (isoWeekdayIndex - startDayIndex + 7) % 7;
-            let weekStart = today.clone().subtract(daysToSubtract, "days").startOf("day");
 
-            const weekStartDayName = weekStart.format("dddd");
+            let daysToSubtract = window.moment().day() - (startDayIndex % 7);
 
-            // Workaround for an Android issue where the start day is off by one.
-            if (weekStartDayName !== this.settings.startDay) {
-                if (weekStartDayName === "Sunday") {
-                    weekStart = weekStart.clone().subtract(6, "days").startOf("day");
-                } else {
-                    weekStart = weekStart.clone().add(1, "days").startOf("day");
-                }
+            if (daysToSubtract < 0) {
+                daysToSubtract += 7;
             }
 
+            const weekStart = today.clone().subtract(daysToSubtract, "days").startOf("day");
             const weeklyNoteTitle = weekStart.format(this.settings.titleFormat);
             const weeklyNoteFilepath = normalizePath(`${weeklyNoteTitle}.md`);
 

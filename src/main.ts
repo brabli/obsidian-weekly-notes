@@ -1,4 +1,4 @@
-import { Notice, normalizePath, Platform, Plugin, TFile } from "obsidian";
+import { Notice, normalizePath, Plugin, TFile } from "obsidian";
 import { DEFAULT_SETTINGS, type WeeklyNotesSettings, WeeklyNotesSettingsTab } from "./settings";
 import { replaceTemplateVariables, weekdayToIsoIndex } from "./utils";
 

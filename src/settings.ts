@@ -29,7 +29,7 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
 
         containerEl.empty();
 
-        const dateDesc = document.createDocumentFragment();
+        const dateDesc = createFragment();
 
         dateDesc.appendText("For a list of all available tokens, see the ");
         dateDesc.createEl("a", {

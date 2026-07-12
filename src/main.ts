@@ -51,6 +51,7 @@ export default class WeeklyNotes extends Plugin {
             if (existingWeeklyNote instanceof TFile) {
                 let opened = false;
 
+                // Iterating root leaves doesn't account for notes in side panels; this is fine.
                 this.app.workspace.iterateRootLeaves((leaf) => {
                     if (weeklyNoteTitle === leaf.getDisplayText()) {
                         this.app.workspace.setActiveLeaf(leaf);

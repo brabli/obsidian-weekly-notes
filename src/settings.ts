@@ -44,6 +44,7 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
 
         const dateSampleEl = dateDesc.createEl("b", "u-pop");
 
+        // Title format
         new Setting(containerEl)
             .setName("Title format")
             .setDesc(dateDesc)
@@ -66,6 +67,7 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                     }),
             );
 
+        // Template file
         new Setting(containerEl)
             .setName("Template file")
             .setDesc("Select the template file to use.")
@@ -131,6 +133,7 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
                 dropdown.setValue(this.plugin.settings.templatePath);
             });
 
+        // Start day
         new Setting(containerEl)
             .setName("Start day")
             .setDesc("Day of the week to start on.")

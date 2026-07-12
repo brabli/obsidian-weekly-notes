@@ -35,7 +35,7 @@ export default class WeeklyNotes extends Plugin {
             const startDayIndex = weekdayToIsoIndex(startDay);
             const today = window.moment();
 
-            let daysToSubtract = window.moment().day() - (startDayIndex % 7);
+            let daysToSubtract = today.day() - (startDayIndex % 7);
 
             if (daysToSubtract < 0) {
                 daysToSubtract += 7;

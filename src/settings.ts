@@ -77,10 +77,6 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
 
                     for (const file of allMarkdownFiles) {
                         dropdown.addOption(file.path, file.path);
-
-                        dropdown.setValue(this.plugin.settings.templatePath).onChange((value) => {
-                            this.plugin.settings.templatePath = value;
-                        });
                     }
                 };
 

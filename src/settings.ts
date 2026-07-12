@@ -137,7 +137,10 @@ export class WeeklyNotesSettingsTab extends PluginSettingTab {
             .addDropdown(async (dropdown) => {
                 dropdown.onChange(async (value: Weekday) => {
                     this.plugin.settings.startDay = value;
-                    await this.plugin.saveSettings();
+                    await this.plugin.saveSettings().catch((e) => {
+                        console.error(e);
+                        new Notice("Error saving config.");
+                    });
                 });
 
                 dropdown.addOptions({
